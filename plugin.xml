@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-plugin-jumio-mobilesdk" version="3.9.2" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>JumioMobileSDK</name>
+    <js-module name="JumioMobileSDK" src="www/JumioMobileSDK.js">
+        <clobbers target="Jumio" />
+    </js-module>
+
+    <platform name="ios">
+	    <hook src="hooks/PodFileCodeInjection.js" type="after_prepare" />
+        <config-file target="config.xml" parent="/*">
+            <feature name="JumioMobileSDK">
+                <param name="ios-package" value="JumioMobileSDK" />
+            </feature>
+        </config-file>
+        <header-file src="src/ios/JumioMobileSDK.h" />
+        <source-file src="src/ios/JumioMobileSDK.m" />
+        
+        <preference name="CAMERA_USAGE_DESCRIPTION" default="This will allow ${PRODUCT_NAME} to take photos of your credentials."/>
+        <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
+            <string>$CAMERA_USAGE_DESCRIPTION</string>
+        </config-file>
+
+        <resource-file src="src/ios/JumioMobileSDK/Localizations/ar.lproj"/>
+        <config-file platform="ios" target="*-Info.plist" parent="CFBundleLocalizations">  
+		            <array>
+		                <string>en</string>
+                        <string>ar</string>
+		            </array>
+		</config-file>
+
+        <podspec>
+            <config>
+                <source url="https://cdn.cocoapods.org/"/>
+            </config>
+            <pods use-frameworks="true">
+                <pod name="JumioMobileSDK" spec="3.9.4" />
+            </pods>
+        </podspec>        
+		
+    </platform>
+
+        <platform name="android">
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+            <uses-permission android:name="android.permission.INTERNET"/>
+            <uses-permission android:name="android.permission.CAMERA"/>
+            <uses-permission android:name="android.permission.VIBRATE"/>
+            <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS"/>
+            <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+        </config-file>
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity
+                android:name="com.jumio.bam.BamActivity"
+                android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+                android:hardwareAccelerated="true"
+                android:theme="@style/Theme.Bam"
+                android:exported="false" />
+            <activity
+                android:name="com.jumio.nv.NetverifyActivity"
+                android:windowSoftInputMode="adjustResize"
+                android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+                android:hardwareAccelerated="true"
+                android:theme="@style/CustomNetverifyTheme"
+                android:exported="false" />
+            <activity
+                android:name="com.jumio.dv.DocumentVerificationActivity"
+                android:windowSoftInputMode="adjustResize"
+                android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+                android:hardwareAccelerated="true"
+                android:theme="@style/Theme.DocumentVerification"
+                android:exported="false" />
+        </config-file>
+        <config-file target="config.xml" parent="/*">
+            <feature name="JumioMobileSDK">
+                <param name="android-package"
+                value="com.jumio.mobilesdk.JumioMobileSDK"/>
+            </feature>            
+        </config-file>
+        <proguard-config>
+			-ignorewarnings
+			-keep class com.jumio.** { *; }
+			-keep class jumio.** { *; }
+			-keep class com.microblink.** { *; }
+			-keep class com.microblink.**$* { *; }
+      -keep public class com.iproov.sdk.IProov {public *; }
+
+			-keep class net.sf.scuba.smartcards.IsoDepCardService {*;}
+			-keep class org.jmrtd.** { *; }
+			-keep class net.sf.scuba.** {*;}
+			-keep class org.bouncycastle.** {*;}
+			-keep class org.ejbca.** {*;}
+
+			-dontwarn java.nio.**
+			-dontwarn org.codehaus.**
+			-dontwarn org.ejbca.**
+			-dontwarn org.bouncycastle.**
+			-dontwarn com.microblink.**
+			-dontwarn javax.annotation.Nullable
+        </proguard-config>
+        <source-file src="src/android/strings-jumio-sdk.xml" target-dir="res/values-ar" />
+        <source-file src="src/android/CustomNetverifyTheme.xml" target-dir="res/values" />
+        <source-file src="src/android/JumioMobileSDK.java" target-dir="src/com/jumio/mobilesdk" />
+	<framework src="src/android/custom.gradle" custom="true" type="gradleReference" />
+    </platform>
+</plugin>
