@@ -6,7 +6,7 @@
     </js-module>
 
     <platform name="ios">
-	<hook src="hooks/PodFileCodeInjection.js" type="after_plugin_install" />
+	<hook src="hooks/PodFileCodeInjection.js" type="before_plugin_install" />
         <hook src="hooks/podInstall.js" type="after_plugin_install" />
         <config-file target="config.xml" parent="/*">
             <feature name="JumioMobileSDK">
